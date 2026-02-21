@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Regretevator API</title>
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body class="bg-dark text-white">
+
+<div id="app">
+
+  
+  <div class="banner text-center py-5">
+    <h1>Regretevator</h1>
+  </div>
+
+  <div class="container mt-4">
+
+   
+    <div class="row mb-3">
+
+      <div class="col-md-6">
+        <input type="text"
+               class="form-control"
+               placeholder="Buscar personaje..."
+               v-model="busqueda">
+      </div>
+
+      <div class="col-md-3">
+        <button class="btn btn-danger w-100"
+                @click="buscarAPI">
+          Buscar
+        </button>
+      </div>
+
+      <div class="col-md-3">
+        <button class="btn btn-outline-light w-100"
+                @click="resetear">
+          Reset
+        </button>
+      </div>
+
+    </div>
+    <div class="progress mb-4">
+      <div class="progress-bar bg-danger"
+           :style="{width: porcentaje + '%'}"
+           v-text="porcentaje + '% resultados'">
+      </div>
+    </div>
+
+    
+    <div class="row">
+
+      <div class="col-md-4 mb-4"
+           v-for="item in filtrados"
+           :key="item.id">
+
+        <div class="card h-100 bg-secondary text-white">
+
+          <img :src="item.imageUrl"
+               class="card-img-top">
+
+          <div class="card-body">
+
+            <h5 v-text="item.name"></h5>
+
+            <p>
+              <strong>Pronombres:</strong>
+              <span v-text="item.pronouns"></span>
+            </p>
+
+            <button class="btn btn-danger w-100"
+                    @click="verDetalle(item)">
+              Ver detalle
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="mt-3">
+      <h5>Total mostrados: {{ filtrados.length }}</h5>
+    </div>
+
+  </div>
+
+  <div class="modal fade" id="detalleModal">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-white">
+
+        <div class="modal-header">
+          <h5 v-text="seleccionado.name"></h5>
+          <button class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <img :src="seleccionado.imageUrl"
+               class="img-fluid mb-3">
+
+          <p><strong>ID:</strong> {{ seleccionado.id }}</p>
+          <p><strong>Pronombres:</strong> {{ seleccionado.pronouns }}</p>
+          <p v-text="seleccionado.description"></p>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<script src="js/enlace_malvado.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
