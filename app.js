@@ -2,93 +2,82 @@ const { createApp } = Vue;
 
 createApp({
 
-  data(){
-    return{
+  data() {
+    return {
       items: [],
       itemsOriginales: [],
       busqueda: "",
-      seleccionado: {},
-  apiBase: "https://api-regretevator.onrender.com"
-    }
+      seleccionado: {
+        name: "",
+        imageUrl: "",
+        id: "",
+        pronouns: "",
+        description: ""
+      },
+      apiBase: "https://api-regretevator.onrender.com" // tu API online
+    };
   },
 
-  mounted(){
+  mounted() {
     this.cargarPersonajes();
-    
   },
 
-  computed:{
-
-   filtrados(){
-  return this.itemsOriginales.filter(item =>
-    item.name.toLowerCase().includes(this.busqueda.toLowerCase())
-  );
-},
-
-    porcentaje(){
-      if(this.itemsOriginales.length === 0) return 0;
-      return Math.round((this.filtrados.length / this.itemsOriginales.length)*100);
-    }
-
-  },
-
-  methods:{
-
- cargarPersonajes() {
-  axios.get(this.apiBase + "/characters")
-    .then((respuesta) => {
-      // Guardamos los datos
-      this.items = respuesta.data;
-      this.itemsOriginales = respuesta.data;
-
-      // 🔹 Limpiar las URLs de las imágenes (ahora también .webp)
-      this.itemsOriginales = this.itemsOriginales.map((item) => {
-        if(item.imageUrl){
-          const match = item.imageUrl.match(/https?:\/\/.*\.(png|jpg|jpeg|gif|webp)/i);
-          if(match){
-            item.imageUrl = match[0]; // reemplaza con la URL limpia
-          }
-        }
-        return item;
-      });
-
-      // Guardamos en localStorage
-      localStorage.setItem("regretevator", JSON.stringify(this.itemsOriginales));
-    })
-    .catch(() => {
-      const guardado = localStorage.getItem("regretevator");
-      if(guardado){
-        this.items = JSON.parse(guardado);
-        this.itemsOriginales = JSON.parse(guardado);
-      }
-    });
-}
-
-      localStorage.setItem("regretevator", JSON.stringify(this.itemsOriginales));
-    })
-    .catch(() => {
-      const guardado = localStorage.getItem("regretevator");
-      if(guardado){
-        this.items = JSON.parse(guardado);
-        this.itemsOriginales = JSON.parse(guardado);
-      }
-    });
-}
+  computed: {
+    filtrados() {
+      return this.itemsOriginales.filter(item =>
+        item.name.toLowerCase().includes(this.busqueda.toLowerCase())
+      );
     },
 
-    resetear(){
+    porcentaje() {
+      if (this.itemsOriginales.length === 0) return 0;
+      return Math.round((this.filtrados.length / this.itemsOriginales.length) * 100);
+    }
+  },
+
+  methods: {
+
+    cargarPersonajes() {
+      axios.get(this.apiBase + "/characters")
+        .then((respuesta) => {
+          // Guardamos los datos
+          this.items = respuesta.data;
+          this.itemsOriginales = respuesta.data;
+
+          // 🔹 Limpiar las URLs de las imágenes
+          this.itemsOriginales = this.itemsOriginales.map((item) => {
+            if (item.imageUrl) {
+              const match = item.imageUrl.match(/https?:\/\/.*\.(png|jpg|jpeg|gif|webp)/i);
+              if (match) {
+                item.imageUrl = match[0]; // reemplaza con la URL limpia
+              }
+            }
+            return item;
+          });
+
+          // Guardamos en localStorage
+          localStorage.setItem("regretevator", JSON.stringify(this.itemsOriginales));
+        })
+        .catch(() => {
+          const guardado = localStorage.getItem("regretevator");
+          if (guardado) {
+            this.items = JSON.parse(guardado);
+            this.itemsOriginales = JSON.parse(guardado);
+          }
+        });
+    },
+
+    resetear() {
       this.busqueda = "";
       this.items = this.itemsOriginales;
     },
 
-    verDetalle(item){
+    verDetalle(item) {
       this.seleccionado = item;
-      const modal =
-        new bootstrap.Modal(document.getElementById("detalleModal"));
+      const modal = new bootstrap.Modal(document.getElementById("detalleModal"));
       modal.show();
     }
 
   }
 
-
-).mount("#app");
+}).mount("#app");
