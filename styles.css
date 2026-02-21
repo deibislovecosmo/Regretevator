@@ -4,7 +4,7 @@ body{
 }
 
 .banner{
-  background-image:url("../imagenes/Regretevator.jpg");
+  background-image:url("Regretevator.jpg");
   background-size:cover;
   background-position:center;
   height:220px;
@@ -24,4 +24,5 @@ body{
 .card:hover{
   transform:scale(1.03);
   transition:0.3s;
+
 }
