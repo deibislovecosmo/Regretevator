@@ -34,22 +34,35 @@ createApp({
 
   methods:{
 
-   cargarPersonajes() {
+ cargarPersonajes() {
   axios.get(this.apiBase + "/characters")
     .then((respuesta) => {
+      // Guardamos los datos
       this.items = respuesta.data;
       this.itemsOriginales = respuesta.data;
 
-      
+      // 🔹 Limpiar las URLs de las imágenes (ahora también .webp)
       this.itemsOriginales = this.itemsOriginales.map((item) => {
         if(item.imageUrl){
-          const match = item.imageUrl.match(/https?:\/\/.*\.(png|jpg|jpeg|gif)/i);
+          const match = item.imageUrl.match(/https?:\/\/.*\.(png|jpg|jpeg|gif|webp)/i);
           if(match){
-            item.imageUrl = match[0]; 
+            item.imageUrl = match[0]; // reemplaza con la URL limpia
           }
         }
         return item;
       });
+
+      // Guardamos en localStorage
+      localStorage.setItem("regretevator", JSON.stringify(this.itemsOriginales));
+    })
+    .catch(() => {
+      const guardado = localStorage.getItem("regretevator");
+      if(guardado){
+        this.items = JSON.parse(guardado);
+        this.itemsOriginales = JSON.parse(guardado);
+      }
+    });
+}
 
       localStorage.setItem("regretevator", JSON.stringify(this.itemsOriginales));
     })
@@ -76,5 +89,6 @@ createApp({
     }
 
   }
+
 
 ).mount("#app");
